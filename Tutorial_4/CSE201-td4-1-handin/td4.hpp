@@ -81,9 +81,9 @@ public:
 
 private:
     int tot_points;
-    int *x;
-    int *y;
-    int *time;
+    double *x;
+    double *y;
+    double *time;
 };
 
 // Exercise 7 - Assembly all together: the game class

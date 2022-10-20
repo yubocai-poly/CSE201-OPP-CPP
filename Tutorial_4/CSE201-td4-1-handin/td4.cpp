@@ -114,8 +114,8 @@ double Projectile::get_velocity_y()
 void Projectile::simulate_step(double t)
 {
     velocity_y = velocity_y - G_CONSTANT * t;
-    x = x + velocity_x * t;
-    y = y + velocity_y * t - 0.5 * G_CONSTANT * t * t;
+    x += velocity_x * t;
+    y += velocity_y * t - 0.5 * G_CONSTANT * t * t;
 }
 
 // Exercise 5 - Detecting the collision with a target
@@ -136,9 +136,9 @@ bool Projectile::intersect(Target target)
 // Exercise 6 - Recording the projectile’s trajectory
 Telemetry::Telemetry()
 {
-    x = new int[10000];
-    y = new int[10000];
-    time = new int[10000];
+    x = new double[10000];
+    y = new double[10000];
+    time = new double[10000];
     tot_points = 0;
 }
 
@@ -169,15 +169,14 @@ void Telemetry::get_point(int i, double &Time, double &X, double &Y)
     Time = time[i];
 }
 
+
 // Exercise 7 - Assembly all together: the game class
 void Game::run(double simulation_interval)
 {
-    Coordinate position = projectile.get_position();
-    while (projectile.intersect(target) != true && position.get_y() >= 0)
+    do
     {
-        telemetry.add_point(simulation_interval, position.get_x(), position.get_y());
+        telemetry.add_point(time, projectile.get_position().get_x(), projectile.get_position().get_y());
         projectile.simulate_step(simulation_interval);
         time += simulation_interval;
-        position = projectile.get_position();
-    }
+    } while (!projectile.intersect(target) && projectile.get_position().get_y() >= 0);
 }
